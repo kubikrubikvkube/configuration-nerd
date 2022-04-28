@@ -19,6 +19,7 @@ dependencies {
     implementation("org.thymeleaf:thymeleaf:3.0.12.RELEASE")
     implementation("org.reflections:reflections:0.10.2")
     implementation("com.google.guava:guava:31.1-jre")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.2")
     testImplementation("org.jetbrains.kotlin:kotlin-test:1.4.31")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.1")
     testImplementation("org.junit.jupiter:junit-jupiter-engine:5.8.1")
