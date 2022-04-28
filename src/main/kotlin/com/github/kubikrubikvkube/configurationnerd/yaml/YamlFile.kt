@@ -1,12 +1,14 @@
 package com.github.kubikrubikvkube.configurationnerd.yaml
 
+import java.util.*
+
 
 data class SearchResult(var foundValue: Any?)
 
 /**
  * Абстракция над YAML файлом
  */
-class YamlFile(val valueMap: Map<String, Any>) {
+class YamlFile(private val valueMap: Map<String, Any>) {
     /**
      * Найти значение по ключу, вне зависимости от уровня вложенности
      * При совпадении ключей в структуре вида
@@ -26,6 +28,28 @@ class YamlFile(val valueMap: Map<String, Any>) {
         val searchResult = SearchResult(null)
         findNestedValueByKey(key, valueMap, searchResult)
         return searchResult.foundValue
+    }
+
+    /**
+     * Найти значение по пути.
+     * Пример пути "root.object.internal.value"
+     */
+    fun findValueByPath(valuePath: String, delimiter: String = ".") : Any? {
+
+        val pathList = valuePath.split(delimiter, ignoreCase = true, limit = 0).onEach { it.trim() }
+        val lastValue = pathList.last()
+        var lastValueMap = valueMap as Map<*, *>
+
+        for (path in pathList) {
+            if (path == lastValue) {
+               return lastValueMap[path]
+            }
+            if (lastValueMap[path] !is Map<*, *>) {
+                return null
+            }
+            lastValueMap = lastValueMap[path] as Map<*, *>
+        }
+        return null
     }
 
     private fun findNestedValueByKey(key: String, map: Map<*, *>, searchResult: SearchResult) {
