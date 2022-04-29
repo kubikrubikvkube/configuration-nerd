@@ -2,20 +2,21 @@ package com.github.kubikrubikvkube.configurationnerd.reflection
 
 import com.github.kubikrubikvkube.configurationnerd.GradleProject
 import com.github.kubikrubikvkube.configurationnerd.validation.Validator
-import java.util.stream.Collectors
+import java.util.stream.Collectors.toUnmodifiableList
 
 object ValidatorInitializer {
 
     fun initialize(
-        validators: MutableList<Class<out Validator>>,
+        validatorClasses: MutableList<Class<out Validator>>,
         gradleProject: GradleProject,
-    ): MutableList<Validator> {
-        return validators
+    ): List<Validator> {
+
+        return validatorClasses
             .parallelStream()
             .map { validator ->
                 val constructor = validator.getDeclaredConstructor(GradleProject::class.java)
                 constructor.newInstance(gradleProject)
             }
-            .collect(Collectors.toUnmodifiableList())
+            .collect(toUnmodifiableList())
     }
 }
